@@ -5,41 +5,38 @@ class Main {
         int radius = 0;
         int height = 0;
         String input = "";
+        int inputArray[] = { 0 };
+        int temp = 0;
 
         final String INPUT_ERROR = "Input must be a positive real number!";
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("# Test of area and volume");
-
         while (true) {
-            System.out.print("Enter radius and height (q to quit): ");
-            // try to read radius and height
+            // Read input
+            input = scanner.nextLine();
+
+            // If 'q' or 'Q' is entered, exit the program
+            if (input.equals("q") || input.equals("Q")) {
+                break;
+            }
+
+            // Parse input into array
             try {
-                input = scanner.next();
-                if (input.equals("q")) {
-                    // TODO: do stuff
-                    System.out.println("RUN ANOTHER METHOD");
-                    break;
-                }
-                radius = Integer.parseInt(input);
-                if (radius <= 0) {
-                    throw new NumberFormatException(INPUT_ERROR);
-                }
-                input = scanner.next();
-                if (input.equals("q")) {
-                    // TODO: do stuff
-                    System.out.println("RUN ANOTHER METHOD");
-                    break;
-                }
-                height = Integer.parseInt(input);
-                if (height <= 0) {
-                    throw new NumberFormatException(INPUT_ERROR);
-                }
-            } catch (NumberFormatException e) {
+                inputArray = parseInput(input, temp, inputArray);
+            } catch (Exception e) {
                 System.out.println(INPUT_ERROR);
                 continue;
             }
+
+            System.out.println("---------------------------------");
+            System.out.println("# Test of area and volume methods");
+            System.out.println("---------------------------------");
+            System.out.print("> ");
+            for (int i = 0; i < inputArray.length; i++) {
+                System.out.print(inputArray[temp] + " ");
+            }
+            temp++; // Increment temp
 
             // Calculate base area
             AREA(radius);
@@ -51,6 +48,12 @@ class Main {
             VOLUME(radius, height);
         }
         scanner.close();
+    }
+
+    private static int[] parseInput(String input, int temp, int[] inputArray) {
+        inputArray[temp] = Integer.valueOf(input);
+
+        return inputArray;
     }
 
     private static double AREA(int radius) {
