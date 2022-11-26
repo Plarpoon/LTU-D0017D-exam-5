@@ -1,67 +1,68 @@
 import java.util.Scanner;
 
-class Main {
+public class Main {
     public static void main(String[] args) {
-        int radius = 0;
-        int height = 0;
-        String input = "";
-        int inputArray[] = { 0 };
-        int temp = 0;
 
-        final String INPUT_ERROR = "Input must be a positive real number!";
-
+        // Add scanner
         Scanner scanner = new Scanner(System.in);
 
-        while (true) {
-            // Read input
-            input = scanner.nextLine();
+        SETUP_EX1(scanner);
+    }
 
-            // If 'q' or 'Q' is entered, exit the program
-            if (input.equals("q") || input.equals("Q")) {
-                break;
-            }
+    private static void SETUP_EX1(Scanner scanner) {
+        CLEAR_CONSOLE();
+        PRINT_MENU_EX1();
+        EXEC_EX1(scanner);
+    }
 
-            // Parse input into array
-            try {
-                inputArray = parseInput(input, temp, inputArray);
-            } catch (Exception e) {
-                System.out.println(INPUT_ERROR);
-                continue;
-            }
+    private static void CLEAR_CONSOLE() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
 
-            System.out.println("---------------------------------");
-            System.out.println("# Test of area and volume methods");
-            System.out.println("---------------------------------");
-            System.out.print("> ");
-            for (int i = 0; i < inputArray.length; i++) {
-                System.out.print(inputArray[temp] + " ");
-            }
-            temp++; // Increment temp
+    private static void EXEC_EX1(Scanner scanner) {
+        // Read input into string array
+        String[] input = scanner.nextLine().split(" ");
 
-            // Calculate base area
-            AREA(radius);
-
-            // Calculate surface area
-            AREA(radius, height);
-
-            // Calculate volume
-            VOLUME(radius, height);
+        // DEBUG: Print whole array
+        for (String s : input) {
+            System.out.println(s);
         }
-        scanner.close();
+
+        // If 'q' or 'Q' is entered, proceed to next exercise
+        if (input[0].equals("q") || input[0].equals("Q")) {
+            System.out.println("DEBUG: NEXT EXCERCISE LOADING...");
+        }
+
+        // Assign input[0] to radius
+        int radius = Integer.parseInt(input[0]);
+
+        // Calculate area
+        AREA(radius);
+
+        // Assign input[1] to height
+        int height = Integer.parseInt(input[1]);
+
+        // Calculate surgaface area
+        AREA(radius, height);
+
+        // Calculate volume
+        VOLUME(radius, height);
     }
 
-    private static int[] parseInput(String input, int temp, int[] inputArray) {
-        inputArray[temp] = Integer.valueOf(input);
+    private static double VOLUME(int radius, int height) {
+        // Calculate volume of the cone
+        double volume = Math.PI * Math.sqrt(radius) * Math.sqrt(height) / 3;
+        System.out.println("Volume: " + volume);
 
-        return inputArray;
+        return volume;
     }
 
-    private static double AREA(int radius) {
-        // Calculate base surface area (area of the circle)
-        double base_area = Math.PI * Math.sqrt(radius);
-        System.out.println("Base area: " + base_area);
+    private static double SLANT_HEIGHT(int radius, int height) {
+        // Calculate slant height of the cone
+        double slant_height = Math.sqrt(radius) + Math.sqrt(height);
 
-        return base_area;
+        return slant_height;
     }
 
     private static double AREA(int radius, int height) {
@@ -72,18 +73,18 @@ class Main {
         return surface_area;
     }
 
-    private static double SLANT_HEIGHT(int radius, int height) {
-        // Calculate slant height of the cone
-        double slant_height = Math.sqrt(radius) + Math.sqrt(height);
+    private static double AREA(int radius) {
+        // Calculate base surface area (area of the circle)
+        double base_area = Math.PI * Math.sqrt(radius);
+        System.out.println("Base area: " + base_area);
 
-        return slant_height;
+        return base_area;
     }
 
-    private static double VOLUME(int radius, int height) {
-        // Calculate volume of the cone
-        double volume = Math.PI * Math.sqrt(radius) * Math.sqrt(height) / 3;
-        System.out.println("Volume: " + volume);
-
-        return volume;
+    private static void PRINT_MENU_EX1() {
+        System.out.println("---------------------------------");
+        System.out.println("# Test of area and volume methods");
+        System.out.println("---------------------------------");
+        System.out.print("> ");
     }
 }
