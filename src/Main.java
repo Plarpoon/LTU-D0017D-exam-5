@@ -20,29 +20,36 @@ public class Main {
     }
 
     private static void EXEC_EX1(Scanner scanner) {
-        // Read input into string array
-        String[] input = scanner.nextLine().split(" ");
 
-        // While loop until array is empty
-        while (input.length > 0) {
-            // If 'q' or 'Q' is entered, proceed to next exercise
-            if (input[0].equals("q") || input[0].equals("Q")) {
-                System.out.println("DEBUG: NEXT EXCERCISE LOADING...");
-                System.exit(0);
-            }
+        while (scanner.hasNext()) {
+            // Read input into string array
+            String[] input = scanner.nextLine().split(" ");
 
-            // Assign input[0] to radius
-            int radius = Integer.parseInt(input[0]);
+            // While loop until array is empty
+            while (input.length > 0) {
+                // If 'q' or 'Q' is entered, proceed to next exercise
+                if (input[0].equals("q") || input[0].equals("Q")) {
+                    System.out.println("DEBUG: NEXT EXCERCISE LOADING...");
+                    CLEAR_CONSOLE();
+                    System.exit(0);
+                }
 
-            // Assign input[1] to height
-            int height = Integer.parseInt(input[1]);
+                // Assign input[0] to radius
+                int radius = Integer.parseInt(input[0]);
 
-            // Print results
-            PRINT_RESULTS_EX1(radius, height);
+                // Assign input[1] to height
+                int height = 0;
+                if (input.length > 1) {
+                    height = Integer.parseInt(input[1]);
+                }
 
-            // Remove first element from array
-            if (input.length >= 2) {
-                input = REMOVE_FIRST_TWO_ELEMENTS(input);
+                // Print results
+                PRINT_RESULTS_EX1(radius, height);
+
+                // Remove first element from array
+                if (input.length >= 2) {
+                    input = REMOVE_FIRST_TWO_ELEMENTS(input);
+                }
             }
         }
     }
