@@ -9,12 +9,11 @@ public class Main {
     public static void main(String[] args) {
 
         final int PROCEED = -1;
-        final String TOO_SMALL = "Value must be greater than 0. Please try again.";
 
         ArrayList<Integer> numbers = new ArrayList<Integer>();
 
         PRINT_MENU_1();
-        READ_INPUT_1(PROCEED, TOO_SMALL, numbers);
+        READ_INPUT_1(PROCEED, numbers);
         EXECUTE_PHASE_1(numbers, PROCEED);
     }
 
@@ -30,6 +29,14 @@ public class Main {
         Iterator<Integer> it = numbers.iterator();
 
         for (int number : numbers) {
+
+            // If the user entered 'q', proceed to phase 2
+            if (number == PROCEED) {
+                System.out.println("PHASE 2");
+                PHASE_2();
+                break;
+            }
+
             // Despite seemingly looking like it checks for two elements
             // In reality it checks if there is only one element in the array
             // As the last element is always 'q'
@@ -61,6 +68,7 @@ public class Main {
                         it.remove();
                     }
                 }
+
                 // The previous element (1) is now at index (0)
                 // So we remove it again
                 while (it.hasNext()) {
@@ -71,14 +79,10 @@ public class Main {
                 }
             }
         }
-        // If the user entered 'q', proceed to phase 2
-        if (numbers.get(0) == PROCEED) {
-            System.out.println("PHASE 2");
-            PHASE_2();
-        }
     }
 
     private static double VOLUME(int radius, int height) {
+
         // Calculate volume of the cone
         double volume = Math.PI * Math.sqrt(radius) * Math.sqrt(height) / 3;
 
@@ -86,6 +90,7 @@ public class Main {
     }
 
     private static double SLANT_HEIGHT(int radius, int height) {
+
         // Calculate slant height of the cone
         double slant_height = Math.sqrt(radius) + Math.sqrt(height);
 
@@ -93,6 +98,7 @@ public class Main {
     }
 
     private static double AREA(int radius, int height) {
+
         // Calculate area of the tip of the cone
         double surface_area = Math.PI * radius * SLANT_HEIGHT(radius, height);
 
@@ -100,13 +106,14 @@ public class Main {
     }
 
     private static double AREA(int radius) {
+
         // Calculate base surface area (area of the circle)
         double base_area = Math.PI * Math.sqrt(radius);
 
         return base_area;
     }
 
-    private static ArrayList<Integer> READ_INPUT_1(final int PROCEED, final String TOO_SMALL,
+    private static ArrayList<Integer> READ_INPUT_1(final int PROCEED,
             ArrayList<Integer> numbers) {
 
         while (true) {
@@ -121,8 +128,7 @@ public class Main {
             }
 
             if (value < 1) {
-                System.out.println(TOO_SMALL);
-                System.out.print("> ");
+                value = Math.abs(value);
                 continue;
             }
 
@@ -137,10 +143,12 @@ public class Main {
         final String LINE_MARKER = "> ";
 
         while (true) {
+
             // Check if input is an integer
             if (input.hasNextInt()) {
                 return input.nextInt();
             } else {
+
                 // Check if input is equal to 'q'
                 in = input.next();
 
