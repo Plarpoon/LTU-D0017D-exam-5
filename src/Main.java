@@ -24,7 +24,11 @@ public class Main {
 
     private static void EXECUTE_PHASE_1(ArrayList<Integer> numbers, final int PROCEED) {
 
+        // Create an iterator to iterate through the array
+        // If you don't use an iterator, you will get a
+        // ConcurrentModificationException
         Iterator<Integer> it = numbers.iterator();
+
         for (int number : numbers) {
             // Despite seemingly looking like it checks for two elements
             // In reality it checks if there is only one element in the array
@@ -34,7 +38,12 @@ public class Main {
                 System.out.println("Area: " + String.format("%.2f", AREA(number)));
 
                 // Remove the first element in the array
-                numbers.remove(0);
+                while (it.hasNext()) {
+                    Integer i = it.next();
+                    if (i == 0) {
+                        it.remove();
+                    }
+                }
             }
 
             // Check if the user entered two or more numbers
@@ -46,10 +55,20 @@ public class Main {
                 System.out.println("\n");
 
                 // Remove the first two elements in the array
-                numbers.remove(0);
+                while (it.hasNext()) {
+                    Integer i = it.next();
+                    if (i == 0) {
+                        it.remove();
+                    }
+                }
                 // The previous element (1) is now at index (0)
                 // So we remove it again
-                numbers.remove(0);
+                while (it.hasNext()) {
+                    Integer i = it.next();
+                    if (i == 0) {
+                        it.remove();
+                    }
+                }
             }
         }
         // If the user entered 'q', proceed to phase 2
