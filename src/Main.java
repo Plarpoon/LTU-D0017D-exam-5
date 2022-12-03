@@ -14,16 +14,83 @@ public class Main {
 
         PRINT_MENU_1();
         READ_INPUT_1(PROCEED, TOO_SMALL, numbers);
-        CALCULATE_PHASE_1(numbers);
+        EXECUTE_PHASE_1(numbers, PROCEED);
     }
 
-    private static void CALCULATE_PHASE_1(ArrayList<Integer> numbers) {
-        System.out.println("DEBUG: CALCULATING PHASE 1");
+    private static void PHASE_2() {
+        // TODO: Implement phase 2
+    }
 
-        // Print all numbers for debugging
+    private static void EXECUTE_PHASE_1(ArrayList<Integer> numbers, final int PROCEED) {
+
         for (int number : numbers) {
-            System.out.println(number);
+
+            // Check if the user entered 'q'
+            if (!numbers.contains(PROCEED)) {
+                System.out.println("You must have the value 'q' at the end of the input.");
+            }
+
+            // If the user entered 'q', proceed to phase 2
+            if (number == PROCEED) {
+                System.out.println("PHASE 2");
+                PHASE_2();
+            }
+
+            // Check if the user entered any numbers
+            if (numbers.isEmpty()) {
+                System.out.println("No numbers were entered.");
+            }
+
+            // Check if the user entered only one number
+            if (numbers.size() == 1) {
+                System.out.println("r = " + number);
+                System.out.println("Area: " + String.format("%.2f", AREA(number)));
+
+                // Remove the first element in the array
+                numbers.remove(0);
+            }
+
+            // Check if the user entered two or more numbers
+            if (numbers.size() < 1) {
+                System.out.println("r = " + numbers.get(0) + " h = " + numbers.get(1));
+                System.out.println("Area: " + String.format("%.2f", AREA(numbers.get(0))));
+                System.out.println("Surface area: " + String.format("%.2f", AREA(numbers.get(0), numbers.get(1))));
+                System.out.println("Volume: " + String.format("%.2f", VOLUME(numbers.get(0), numbers.get(1))));
+                System.out.println("\n");
+
+                // Remove the first two elements in the array
+                numbers.remove(0);
+                numbers.remove(1);
+            }
         }
+    }
+
+    private static double VOLUME(int radius, int height) {
+        // Calculate volume of the cone
+        double volume = Math.PI * Math.sqrt(radius) * Math.sqrt(height) / 3;
+
+        return volume;
+    }
+
+    private static double SLANT_HEIGHT(int radius, int height) {
+        // Calculate slant height of the cone
+        double slant_height = Math.sqrt(radius) + Math.sqrt(height);
+
+        return slant_height;
+    }
+
+    private static double AREA(int radius, int height) {
+        // Calculate area of the tip of the cone
+        double surface_area = Math.PI * radius * SLANT_HEIGHT(radius, height);
+
+        return surface_area;
+    }
+
+    private static double AREA(int radius) {
+        // Calculate base surface area (area of the circle)
+        double base_area = Math.PI * Math.sqrt(radius);
+
+        return base_area;
     }
 
     private static ArrayList<Integer> READ_INPUT_1(final int PROCEED, final String TOO_SMALL,
@@ -33,9 +100,8 @@ public class Main {
 
             value = INPUT(PROCEED);
 
-            // TODO: Move this to execution phase when it read this value in the array
+            // Exit loop if user enters 'q'
             if (value == PROCEED) {
-                System.out.println("DEBUG: PROCEEDING TO PART TWO");
                 break;
             }
 
