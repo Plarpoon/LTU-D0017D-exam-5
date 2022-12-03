@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class Main {
@@ -23,26 +24,12 @@ public class Main {
 
     private static void EXECUTE_PHASE_1(ArrayList<Integer> numbers, final int PROCEED) {
 
+        Iterator<Integer> it = numbers.iterator();
         for (int number : numbers) {
-
-            // Check if the user entered 'q'
-            if (!numbers.contains(PROCEED)) {
-                System.out.println("You must have the value 'q' at the end of the input.");
-            }
-
-            // If the user entered 'q', proceed to phase 2
-            if (number == PROCEED) {
-                System.out.println("PHASE 2");
-                PHASE_2();
-            }
-
-            // Check if the user entered any numbers
-            if (numbers.isEmpty()) {
-                System.out.println("No numbers were entered.");
-            }
-
-            // Check if the user entered only one number
-            if (numbers.size() == 1) {
+            // Despite seemingly looking like it checks for two elements
+            // In reality it checks if there is only one element in the array
+            // As the last element is always 'q'
+            if (numbers.size() == 2) {
                 System.out.println("r = " + number);
                 System.out.println("Area: " + String.format("%.2f", AREA(number)));
 
@@ -51,7 +38,7 @@ public class Main {
             }
 
             // Check if the user entered two or more numbers
-            if (numbers.size() < 1) {
+            if (numbers.size() > 2 & (numbers.get(0) != PROCEED | numbers.get(1) != PROCEED)) {
                 System.out.println("r = " + numbers.get(0) + " h = " + numbers.get(1));
                 System.out.println("Area: " + String.format("%.2f", AREA(numbers.get(0))));
                 System.out.println("Surface area: " + String.format("%.2f", AREA(numbers.get(0), numbers.get(1))));
@@ -60,8 +47,15 @@ public class Main {
 
                 // Remove the first two elements in the array
                 numbers.remove(0);
-                numbers.remove(1);
+                // The previous element (1) is now at index (0)
+                // So we remove it again
+                numbers.remove(0);
             }
+        }
+        // If the user entered 'q', proceed to phase 2
+        if (numbers.get(0) == PROCEED) {
+            System.out.println("PHASE 2");
+            PHASE_2();
         }
     }
 
@@ -95,6 +89,7 @@ public class Main {
 
     private static ArrayList<Integer> READ_INPUT_1(final int PROCEED, final String TOO_SMALL,
             ArrayList<Integer> numbers) {
+
         while (true) {
             int value = 0;
 
@@ -102,10 +97,11 @@ public class Main {
 
             // Exit loop if user enters 'q'
             if (value == PROCEED) {
+                numbers.add(value);
                 break;
             }
 
-            if (value < 0) {
+            if (value < 1) {
                 System.out.println(TOO_SMALL);
                 System.out.print("> ");
                 continue;
@@ -113,6 +109,7 @@ public class Main {
 
             numbers.add(value);
         }
+
         return (numbers);
     }
 
@@ -127,6 +124,7 @@ public class Main {
             } else {
                 // Check if input is equal to 'q'
                 in = input.next();
+
                 if (in.equals("q")) {
                     return PROCEED;
                 } else {
