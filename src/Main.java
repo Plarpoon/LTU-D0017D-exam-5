@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 
@@ -10,7 +10,7 @@ public class Main {
 
         final int PROCEED = -1;
 
-        ArrayList<Integer> numbers = new ArrayList<Integer>();
+        CopyOnWriteArrayList<Integer> numbers = new CopyOnWriteArrayList<Integer>();
 
         PRINT_MENU_1();
         READ_INPUT_1(PROCEED, numbers);
@@ -18,43 +18,38 @@ public class Main {
     }
 
     private static void PHASE_2() {
-        // TODO: Implement phase 2
+        System.out.println("\n---------------------------------");
+        System.out.println("Phase 2 is about to be initiated.");
+        System.out.println("Press enter to continue...");
+        System.out.println("---------------------------------");
+
+        // Wait for user to press enter
+        try {
+            System.in.read();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        CLEAR_CONSOLE();
     }
 
-    private static void EXECUTE_PHASE_1(ArrayList<Integer> numbers, final int PROCEED) {
-
-        // Create an iterator to iterate through the array
-        // If you don't use an iterator, you will get a
-        // ConcurrentModificationException
-        Iterator<Integer> it = numbers.iterator();
-
-        for (int number : numbers) {
-
-            // If the user entered 'q', proceed to phase 2
-            if (number == PROCEED) {
-                System.out.println("PHASE 2");
-                PHASE_2();
-                break;
-            }
+    private static void EXECUTE_PHASE_1(CopyOnWriteArrayList<Integer> numbers, final int PROCEED) {
+        Iterator<Integer> iterator = numbers.iterator();
+        while (iterator.hasNext()) {
 
             // Despite seemingly looking like it checks for two elements
             // In reality it checks if there is only one element in the array
             // As the last element is always 'q'
             if (numbers.size() == 2) {
-                System.out.println("r = " + number);
-                System.out.println("Area: " + String.format("%.2f", AREA(number)));
+                System.out.println("r = " + numbers.get(0));
+                System.out.println("Area: " + String.format("%.2f", AREA(numbers.get(0))));
 
                 // Remove the first element in the array
-                while (it.hasNext()) {
-                    Integer i = it.next();
-                    if (i == 0) {
-                        it.remove();
-                    }
-                }
+                numbers.remove(0);
             }
 
             // Check if the user entered two or more numbers
-            if (numbers.size() > 2 & (numbers.get(0) != PROCEED | numbers.get(1) != PROCEED)) {
+            if (numbers.size() > 2 && (numbers.get(0) != PROCEED || numbers.get(1) != PROCEED)) {
                 System.out.println("r = " + numbers.get(0) + " h = " + numbers.get(1));
                 System.out.println("Area: " + String.format("%.2f", AREA(numbers.get(0))));
                 System.out.println("Surface area: " + String.format("%.2f", AREA(numbers.get(0), numbers.get(1))));
@@ -62,21 +57,15 @@ public class Main {
                 System.out.println("\n");
 
                 // Remove the first two elements in the array
-                while (it.hasNext()) {
-                    Integer i = it.next();
-                    if (i == 0) {
-                        it.remove();
-                    }
-                }
-
+                numbers.remove(0);
                 // The previous element (1) is now at index (0)
                 // So we remove it again
-                while (it.hasNext()) {
-                    Integer i = it.next();
-                    if (i == 0) {
-                        it.remove();
-                    }
-                }
+                numbers.remove(0);
+            }
+
+            // If the user entered 'q', proceed to phase 2
+            if (numbers.get(0) == PROCEED) {
+                PHASE_2();
             }
         }
     }
@@ -113,8 +102,8 @@ public class Main {
         return base_area;
     }
 
-    private static ArrayList<Integer> READ_INPUT_1(final int PROCEED,
-            ArrayList<Integer> numbers) {
+    private static CopyOnWriteArrayList<Integer> READ_INPUT_1(final int PROCEED,
+            CopyOnWriteArrayList<Integer> numbers) {
 
         while (true) {
             int value = 0;
@@ -125,11 +114,6 @@ public class Main {
             if (value == PROCEED) {
                 numbers.add(value);
                 break;
-            }
-
-            if (value < 1) {
-                value = Math.abs(value);
-                continue;
             }
 
             numbers.add(value);
@@ -146,7 +130,8 @@ public class Main {
 
             // Check if input is an integer
             if (input.hasNextInt()) {
-                return input.nextInt();
+                // Return absolute value of input
+                return Math.abs(input.nextInt());
             } else {
 
                 // Check if input is equal to 'q'
@@ -167,5 +152,10 @@ public class Main {
         System.out.println("# Test of area and volume methods");
         System.out.println("---------------------------------");
         System.out.print("> ");
+    }
+
+    private static void CLEAR_CONSOLE() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
 }
