@@ -41,11 +41,23 @@ public class Main {
         Iterator<Integer> iterator = numbers.iterator();
         int num = 0;
         int denom = 0;
-        int[] fraction = new int[3];
+        int[] fraction = { 0, 0, 0 };
 
         while (iterator.hasNext()) {
 
-            if (numbers.size() > 3
+            // If only one number is entered, then denom is 0
+            if (numbers.size() == 2) {
+                num = numbers.get(0);
+                denom = 0;
+            }
+
+            // If only 'q' is entered, then num and denom are 0
+            if (numbers.size() == 1) {
+                num = 0;
+                denom = 0;
+            }
+
+            if (numbers.size() >= 3
                     && (numbers.get(0) != PROCEED || numbers.get(1) != PROCEED || numbers.get(2) != PROCEED)) {
 
                 num = numbers.get(0);
@@ -58,13 +70,27 @@ public class Main {
         // If the user entered 'q', exit the program
         if (numbers.get(0) == PROCEED) {
 
+            System.out.println("Program terminated.");
+
             // Exit the program
             System.exit(0);
         }
     }
 
     private static void PRINT_PHASE_2(int num, int denom, int[] fraction) {
-        // TODO: To be implemented
+
+        // Print the fraction
+        if (fraction[0] == 0) {
+            System.out.println(num + "/" + denom + " = " + fraction[1] + "/" + fraction[2]);
+        } else if (fraction[1] == 0) {
+            System.out.println(num + "/" + denom + " = " + fraction[0]);
+        } else if (fraction[2] == 0) {
+            System.out.println("0");
+        } else if (fraction[0] == 0 && fraction[1] == 0 && fraction[2] == 0) {
+            System.out.println("Error");
+        } else {
+            System.out.println(num + "/" + denom + " = " + fraction[0] + " " + fraction[1] + "/" + fraction[2]);
+        }
     }
 
     private static void EXECUTE_PHASE_1(CopyOnWriteArrayList<Integer> numbers, final int PROCEED) {
@@ -128,11 +154,17 @@ public class Main {
 
     private static int GCD(int num, int denom) {
 
-        // Calculate the greatest common divisor
         int gcd = 0;
 
-        for (int i = 1; i <= num && i <= denom; i++) {
+        // Make sure the numerator is greater than the denominator
+        if (num < denom) {
+            int temp = num;
+            num = denom;
+            denom = temp;
+        }
 
+        // Calculate the greatest common divisor
+        for (int i = 1; i <= denom; i++) {
             if (num % i == 0 && denom % i == 0) {
                 gcd = i;
             }
