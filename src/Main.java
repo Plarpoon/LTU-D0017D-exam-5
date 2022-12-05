@@ -13,11 +13,12 @@ public class Main {
         CopyOnWriteArrayList<Integer> numbers = new CopyOnWriteArrayList<Integer>();
 
         PRINT_MENU_1();
-        READ_INPUT_1(PROCEED, numbers);
+        READ_INPUT(PROCEED, numbers);
         EXECUTE_PHASE_1(numbers, PROCEED);
     }
 
-    private static void PHASE_2() {
+    // Allow user to read the output before clearing the console
+    private static void PHASE_2(final int PROCEED, CopyOnWriteArrayList<Integer> numbers) {
         System.out.println("\n---------------------------------");
         System.out.println("Phase 2 is about to be initiated.");
         System.out.println("Press enter to continue...");
@@ -31,6 +32,39 @@ public class Main {
         }
 
         CLEAR_CONSOLE();
+        PRINT_MENU_2();
+        READ_INPUT(PROCEED, numbers);
+        EXECUTE_PHASE_2(numbers, PROCEED);
+    }
+
+    private static void EXECUTE_PHASE_2(CopyOnWriteArrayList<Integer> numbers, final int PROCEED) {
+        Iterator<Integer> iterator = numbers.iterator();
+        int num = 0;
+        int denom = 0;
+        int[] fraction = new int[3];
+
+        while (iterator.hasNext()) {
+
+            if (numbers.size() > 3
+                    && (numbers.get(0) != PROCEED || numbers.get(1) != PROCEED || numbers.get(2) != PROCEED)) {
+
+                num = numbers.get(0);
+                denom = numbers.get(1);
+                fraction = FRACTION(num, denom);
+                PRINT_PHASE_2(num, denom, fraction);
+            }
+        }
+
+        // If the user entered 'q', exit the program
+        if (numbers.get(0) == PROCEED) {
+
+            // Exit the program
+            System.exit(0);
+        }
+    }
+
+    private static void PRINT_PHASE_2(int num, int denom, int[] fraction) {
+        // TODO: To be implemented
     }
 
     private static void EXECUTE_PHASE_1(CopyOnWriteArrayList<Integer> numbers, final int PROCEED) {
@@ -65,9 +99,46 @@ public class Main {
 
             // If the user entered 'q', proceed to phase 2
             if (numbers.get(0) == PROCEED) {
-                PHASE_2();
+
+                // Clear the array
+                numbers.clear();
+
+                // Proceed to phase 2
+                PHASE_2(PROCEED, numbers);
             }
         }
+    }
+
+    private static int[] FRACTION(int num, int denom) {
+
+        int[] temporary = new int[3];
+
+        // Calculate the fraction
+        int whole = num / denom;
+        int remainder = num % denom;
+        int gcd = GCD(num, denom);
+
+        // Store the values in an array
+        temporary[0] = whole;
+        temporary[1] = remainder;
+        temporary[2] = gcd;
+
+        return temporary;
+    }
+
+    private static int GCD(int num, int denom) {
+
+        // Calculate the greatest common divisor
+        int gcd = 0;
+
+        for (int i = 1; i <= num && i <= denom; i++) {
+
+            if (num % i == 0 && denom % i == 0) {
+                gcd = i;
+            }
+        }
+
+        return gcd;
     }
 
     private static double VOLUME(int radius, int height) {
@@ -102,15 +173,16 @@ public class Main {
         return base_area;
     }
 
-    private static CopyOnWriteArrayList<Integer> READ_INPUT_1(final int PROCEED,
+    private static CopyOnWriteArrayList<Integer> READ_INPUT(final int PROCEED,
             CopyOnWriteArrayList<Integer> numbers) {
 
         while (true) {
+
             int value = 0;
 
             value = INPUT(PROCEED);
 
-            // Exit loop if user enters 'q'
+            // Add -1 to the array if the user enters 'q'
             if (value == PROCEED) {
                 numbers.add(value);
                 break;
@@ -150,6 +222,13 @@ public class Main {
     private static void PRINT_MENU_1() {
         System.out.println("---------------------------------");
         System.out.println("# Test of area and volume methods");
+        System.out.println("---------------------------------");
+        System.out.print("> ");
+    }
+
+    private static void PRINT_MENU_2() {
+        System.out.println("---------------------------------");
+        System.out.println("# Test of the fractional methods");
         System.out.println("---------------------------------");
         System.out.print("> ");
     }
