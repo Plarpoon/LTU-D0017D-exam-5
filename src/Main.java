@@ -1,3 +1,29 @@
+
+/**
+ * ===============================================================
+ * What does the program do:
+ * Must execute various types of calculations based on user input
+ * It's fundamental that I use various different methods to do this
+ * The first part will be based on Mathematical calculations
+ * While the second part will be on fractions
+ * ===============================================================
+ * Pseudocode steps:
+ * 1. Print the menu
+ * 2. Read the input
+ * 3. Execute the program passing the array list
+ * 4. Print the results
+ * 5. If the user entered 'q', proceed to phase 2
+ * 6. Print the menu
+ * 7. Read the input
+ * 8. Execute the program passing the array list
+ * 9. Print the results
+ * 10. If the user entered 'q', exit the program
+ * (NOTE: reuse the array list from phase 1)
+ * ===============================================================
+ * Alessandro Suha
+ * alesuh-1
+ */
+
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -10,6 +36,7 @@ public class Main {
 
         final int PROCEED = -1;
 
+        // Create a new array list
         CopyOnWriteArrayList<Integer> numbers = new CopyOnWriteArrayList<Integer>();
 
         PRINT_MENU_1();
@@ -25,7 +52,6 @@ public class Main {
         EXECUTE_PHASE_2(numbers, PROCEED);
     }
 
-    // TODO: FIX THIS LOGIC
     private static void EXECUTE_PHASE_2(CopyOnWriteArrayList<Integer> numbers, final int PROCEED) {
         Iterator<Integer> iterator = numbers.iterator();
         int num = 0;
@@ -121,8 +147,8 @@ public class Main {
             // Check if the user entered two or more numbers
             if (numbers.size() > 2 && (numbers.get(0) != PROCEED || numbers.get(1) != PROCEED)) {
                 System.out.println("r = " + numbers.get(0) + " h = " + numbers.get(1));
-                System.out.println("Area: " + String.format("%.2f", AREA(numbers.get(0))));
-                System.out.println("Surface area: " + String.format("%.2f", AREA(numbers.get(0), numbers.get(1))));
+                System.out.println("Base area: " + String.format("%.2f", AREA(numbers.get(0))));
+                System.out.println("Mantle area: " + String.format("%.2f", AREA(numbers.get(0), numbers.get(1))));
                 System.out.println("Volume: " + String.format("%.2f", VOLUME(numbers.get(0), numbers.get(1))));
                 System.out.println("\n");
 
@@ -147,7 +173,7 @@ public class Main {
 
     private static int[] FRACTION(int num, int denom) {
 
-        int[] temp_array = new int[3];
+        int[] array = new int[3];
 
         // Declare variables
         int integer_part;
@@ -164,17 +190,17 @@ public class Main {
         short_denom = denom / gcd;
 
         // Store the values in an array
-        temp_array[0] = integer_part;
-        temp_array[1] = short_fraction;
-        temp_array[2] = short_denom;
+        array[0] = integer_part;
+        array[1] = short_fraction;
+        array[2] = short_denom;
 
-        // If the GCD is 1, then the fraction is already in its simplest form
+        // If the GCD is denom, then the fraction is already in its simplest form
         if (gcd == denom) {
-            temp_array[1] = num;
-            temp_array[2] = denom;
+            array[1] = num;
+            array[2] = denom;
         }
 
-        return temp_array;
+        return array;
     }
 
     private static int GCD(int num, int denom) {
@@ -201,33 +227,33 @@ public class Main {
     private static double VOLUME(int radius, int height) {
 
         // Calculate volume of the cone
-        double volume = Math.PI * Math.sqrt(radius) * Math.sqrt(height) / 3;
+        double volume = (Math.PI * Math.pow(radius, 2) * height) / 3.0;
 
         return volume;
     }
 
-    private static double SLANT_HEIGHT(int radius, int height) {
+    private static double PYHTAGORAS(int radius, int height) {
 
-        // Calculate slant height of the cone
-        double slant_height = Math.sqrt(radius) + Math.sqrt(height);
+        // Calculate the hypotenuse of the cone
+        double hypotenuse = Math.sqrt(Math.pow(radius, 2) + Math.pow(height, 2));
 
-        return slant_height;
+        return hypotenuse;
     }
 
     private static double AREA(int radius, int height) {
 
         // Calculate area of the tip of the cone
-        double surface_area = Math.PI * radius * SLANT_HEIGHT(radius, height);
+        double area = Math.PI * radius * PYHTAGORAS(radius, height);
 
-        return surface_area;
+        return area;
     }
 
     private static double AREA(int radius) {
 
         // Calculate base surface area (area of the circle)
-        double base_area = Math.PI * Math.sqrt(radius);
+        double area = Math.PI * radius * radius;
 
-        return base_area;
+        return area;
     }
 
     private static CopyOnWriteArrayList<Integer> READ_INPUT(final int PROCEED,
