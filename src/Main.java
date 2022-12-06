@@ -19,37 +19,20 @@ public class Main {
 
     // Allow user to read the output before clearing the console
     private static void PHASE_2(final int PROCEED, CopyOnWriteArrayList<Integer> numbers) {
-        System.out.println("\n---------------------------------");
-        System.out.println("Phase 2 is about to be initiated.");
-        System.out.println("Press enter to continue...");
-        System.out.println("---------------------------------");
 
-        // Wait for user to press enter
-        try {
-            System.in.read();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        CLEAR_CONSOLE();
         PRINT_MENU_2();
         READ_INPUT(PROCEED, numbers);
         EXECUTE_PHASE_2(numbers, PROCEED);
     }
 
+    // TODO: FIX THIS LOGIC
     private static void EXECUTE_PHASE_2(CopyOnWriteArrayList<Integer> numbers, final int PROCEED) {
         Iterator<Integer> iterator = numbers.iterator();
         int num = 0;
         int denom = 0;
-        int[] fraction = { 0, 0, 0 };
+        int[] parts = { 0, 0, 0 };
 
         while (iterator.hasNext()) {
-
-            // If only one number is entered, then denom is 0
-            if (numbers.size() == 2) {
-                num = numbers.get(0);
-                denom = 0;
-            }
 
             // If only 'q' is entered, then num and denom are 0
             if (numbers.size() == 1) {
@@ -57,39 +40,66 @@ public class Main {
                 denom = 0;
             }
 
-            if (numbers.size() >= 3
-                    && (numbers.get(0) != PROCEED || numbers.get(1) != PROCEED || numbers.get(2) != PROCEED)) {
+            // If only one number is entered, then denom is 0
+            if (numbers.size() == 2) {
+                num = numbers.get(0);
+                denom = 0;
+            }
 
+            // If array size is greater than 2, then num and denom are the first two
+            // elements
+            if (numbers.size() > 2) {
                 num = numbers.get(0);
                 denom = numbers.get(1);
-                fraction = FRACTION(num, denom);
-                PRINT_PHASE_2(num, denom, fraction);
             }
-        }
 
-        // If the user entered 'q', exit the program
-        if (numbers.get(0) == PROCEED) {
+            // Calculate the fraction
+            if (denom != 0) {
+                parts = FRACTION(num, denom);
+            }
 
-            System.out.println("Program terminated.");
+            // Print the fraction
+            printFraction(num, denom, parts);
 
-            // Exit the program
-            System.exit(0);
+            // Clear parts array
+            for (int i = 0; i < 3; i++) {
+                parts[i] = 0;
+            }
+
+            // Remove the first two elements in the array
+            numbers.remove(0);
+            numbers.remove(0);
+
+            // If the user entered 'q', exit the program
+            if (numbers.get(0) == PROCEED) {
+
+                // Exit the program
+                System.exit(0);
+            }
         }
     }
 
-    private static void PRINT_PHASE_2(int num, int denom, int[] fraction) {
+    private static void printFraction(int num, int denom, int[] parts) {
 
-        // Print the fraction
-        if (fraction[0] == 0) {
-            System.out.println(num + "/" + denom + " = " + fraction[1] + "/" + fraction[2]);
-        } else if (fraction[1] == 0) {
-            System.out.println(num + "/" + denom + " = " + fraction[0]);
-        } else if (fraction[2] == 0) {
-            System.out.println("0");
-        } else if (fraction[0] == 0 && fraction[1] == 0 && fraction[2] == 0) {
+        // If the first element is 0, then print only the fraction
+        if (parts[0] < 1 && parts[1] > 1 && parts[2] > 1) {
+            System.out.println(num + "/" + denom + " = " + parts[1] + "/" + parts[2]);
+
+            // If the second element is 0, then there is no fraction
+        } else if (parts[1] < 1 && parts[2] > 1 && parts[0] > 1) {
+            System.out.println(num + "/" + denom + " = " + parts[0]);
+
+            // If the third element is 0, just print a 0
+        } else if (parts[2] < 1 && parts[1] > 1 && parts[0] > 1) {
+            System.out.println(num + "/" + denom + " = " + parts[2]);
+
+            // If all elements are 0, then print an error
+        } else if (parts[0] < 1 && parts[1] < 1 && parts[2] < 1) {
             System.out.println("Error");
+
+            // If all elements are greater than 0, then print the whole number and fraction
         } else {
-            System.out.println(num + "/" + denom + " = " + fraction[0] + " " + fraction[1] + "/" + fraction[2]);
+            System.out.println(num + "/" + denom + " = " + parts[0] + " " + parts[1] + "/" + parts[2]);
         }
     }
 
@@ -137,40 +147,55 @@ public class Main {
 
     private static int[] FRACTION(int num, int denom) {
 
-        int[] temporary = new int[3];
+        int[] temp_array = new int[3];
+
+        // Declare variables
+        int integer_part;
+        int remainder;
+        int gcd;
+        int short_fraction;
+        int short_denom;
 
         // Calculate the fraction
-        int whole = num / denom;
-        int remainder = num % denom;
-        int gcd = GCD(num, denom);
+        integer_part = num / denom;
+        remainder = denom - integer_part;
+        gcd = GCD(remainder, denom);
+        short_fraction = remainder / gcd;
+        short_denom = denom / gcd;
 
         // Store the values in an array
-        temporary[0] = whole;
-        temporary[1] = remainder;
-        temporary[2] = gcd;
+        temp_array[0] = integer_part;
+        temp_array[1] = short_fraction;
+        temp_array[2] = short_denom;
 
-        return temporary;
+        // If the GCD is 1, then the fraction is already in its simplest form
+        if (gcd == denom) {
+            temp_array[1] = num;
+            temp_array[2] = denom;
+        }
+
+        return temp_array;
     }
 
     private static int GCD(int num, int denom) {
 
-        int gcd = 0;
+        // Find the smaller number
+        int i;
+        if (num < denom)
+            i = num;
+        else
+            i = denom;
 
-        // Make sure the numerator is greater than the denominator
-        if (num < denom) {
-            int temp = num;
-            num = denom;
-            denom = temp;
+        // Check if the current value of i divides both
+        for (int index = i; index > 1; index--) {
+
+            // If the current value of i divides both, then it is the GCD
+            if (num % index == 0 && denom % index == 0)
+                return index;
         }
 
-        // Calculate the greatest common divisor
-        for (int i = 1; i <= denom; i++) {
-            if (num % i == 0 && denom % i == 0) {
-                gcd = i;
-            }
-        }
-
-        return gcd;
+        // If no value of i divides both, then the GCD is 1
+        return 1;
     }
 
     private static double VOLUME(int radius, int height) {
@@ -263,10 +288,5 @@ public class Main {
         System.out.println("# Test of the fractional methods");
         System.out.println("---------------------------------");
         System.out.print("> ");
-    }
-
-    private static void CLEAR_CONSOLE() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
     }
 }
