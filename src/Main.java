@@ -121,7 +121,7 @@ public class Main {
 
             // If all elements are 0, then print an error
         } else if (parts[0] < 1 && parts[1] < 1 && parts[2] < 1) {
-            System.out.println("Error");
+            System.out.println(num + "/" + denom + " = " + " \"Error\" ");
 
             // If all elements are greater than 0, then print the whole number and fraction
         } else {
